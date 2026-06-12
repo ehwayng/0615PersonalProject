@@ -124,12 +124,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="0615PersonalProject.cpp" />
-    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="GamePlay.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Trash.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="GamePlay.h" />
+    <ClInclude Include="Idea_Note.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Trash.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

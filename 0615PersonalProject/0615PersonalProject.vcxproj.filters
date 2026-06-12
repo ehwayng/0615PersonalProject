@@ -21,7 +21,10 @@
     <ClCompile Include="Player.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="GamePlay.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Trash.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +32,13 @@
     <ClInclude Include="Player.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="Idea_Note.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlay.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Trash.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

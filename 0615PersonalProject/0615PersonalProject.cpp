@@ -1,13 +1,16 @@
 // 0615PersonalProject.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
-//
 
 #include <iostream>
+#include "GamePlay.h"
 
 int main()
 {
     //Player랑 Enemy의 상위 클래스 만들기?
     //최대한 간편화하되, 일정 확률로 나타나는 이벤트 추가해보기(약간의 텍스트 그래픽과 함께...)
-    std::cout << "Hello World!\n";
+    //텍스트가 고정된 화면에서 바꿔 뜨는 것 공부하기
+
+    GamePlay Game;
+    Game.Play_Main();
 }
 
 // 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴
