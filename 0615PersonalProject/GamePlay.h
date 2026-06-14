@@ -1,12 +1,23 @@
 #pragma once
+#include <string>
+#include "Player.h"
+
 class GamePlay
 {
 public:
 	void Play_Main();
-	void Tutorial();
-	void BasicOptin();		//기본 옵션
-	void Battle();
-
-	bool Warning = false;			//전투 발생 조건이 충족되었는지 랜덤함수로 폐지 주울때마다 결정하기?
+	void Intro();
+	void CollectTrash(Player& player);
+	void VisitShop(Player& player);
+	void InvestSP(Player& player);
+	void DungeonBattle(Player& player);
+	void LastGame(Player& player);
 };
 
+struct Monster
+{
+	std::string Name;
+	int HP;
+	int MaxHP;
+	int AttackPower;
+};
