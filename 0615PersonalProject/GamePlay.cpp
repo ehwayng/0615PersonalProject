@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdio>
+#include <Windows.h>
 #include "GamePlay.h"
 #include "Player.h"
 using namespace std;
@@ -8,8 +10,19 @@ Player player;
 
 void GamePlay::Play_Main()	//전반적인 게임 흐름. 필요한 함수는 이 코드 안에서 갖고 놀기.
 {
-    srand(static_cast<unsigned int>(time(NULL)));
+    //ANSI Escape Code(기울임 등)를 활성화하는 설정
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut != INVALID_HANDLE_VALUE) {
+        DWORD dwMode = 0;
+        if (GetConsoleMode(hOut, &dwMode)) {
+            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SetConsoleMode(hOut, dwMode);
+        }
+    }
 
+    srand(static_cast<unsigned int>(time(NULL)));   //랜덤 시드
+
+    /*=========================================================*/
     Intro();        //시작 전 인트로
     
     while (true)    //게임 루프
@@ -57,40 +70,40 @@ void GamePlay::Play_Main()	//전반적인 게임 흐름. 필요한 함수는 이
 
 void GamePlay::Intro()
 {
-	printf("플레이어의 이름을 입력해 주세요 : ");	//걍 튜토리얼을 플레이어 클래스에 넣어야 할듯?
+	printf("플레이어의 이름을 입력해 주세요 : ");
 	cin >> player.Name;
-	printf("[%s]님, ____의 세계에 오신 것을 환영합니다!\n", player.Name.c_str());
-
+	
     system("cls");
     printf("==================================================\n");
-    printf("              [ PROLOGUE : 프롤로그 ]             \n");
+    printf("              [ PROLOGUE: 프롤로그 ]             \n");
     printf("==================================================\n");
-    printf(" 대기업 구조조정의 칼바람이 불던 2026년 봄...\n");
-    printf(" 당신은 회사의 일방적인 인원 감축에 환멸을 느끼고\n");
-    printf(" 사표를 던진 후 당당하게(?) 자발적 퇴사를 감행했습니다.\n");
+    printf(" 대기업 구조조정의 칼바람이 불던 3026년 봄...\n");
+    printf(" 내집 마련의 꿈을 회사에 두고 나와야 했던 당신,\n");
+    printf(" 이 빌딩숲 어디에도 제 한몸 갈 곳이 없습니다.\n");
     printf("--------------------------------------------------\n");
     system("pause");
 
     system("cls");
     printf("==================================================\n");
-    printf("              [ PROLOGUE : 프롤로그 ]             \n");
+    printf("              [ PROLOGUE: 프롤로그 ]             \n");
     printf("==================================================\n");
-    printf(" \"내 능력이면 어디든 못 가겠어?\" 호기롭게 외쳤건만\n");
-    printf(" 냉혹한 현실의 취업 문턱은 높기만 했습니다.\n\n");
-    printf(" 통장 잔고는 단돈 10,000원.\n");
-    printf(" 당장 오늘 먹을 컵라면 값을 걱정하던 당신의 눈에\n");
-    printf(" 길거리에 굴러다니는 '박스'와 '알루미늄 캔'이 들어옵니다...\n");
+    printf(" \033[3m'어떻게든 살아지겠지!'\033[0m 호기롭게 외쳤지만\n");
+    printf(" 현실은 차갑기만 했습니다.\n\n");
+    printf(" 통장 잔고는 단돈 10000원.\n");
+    printf(" 당장 오늘의 밥값을 걱정하던 당신의 눈에\n");
+    printf(" 길거리에 굴러다니는 박스와 빈 캔이 들어옵니다...\n");
     printf("--------------------------------------------------\n");
     system("pause");
 
     system("cls");
     printf("==================================================\n");
-    printf("              [ PROLOGUE : 프롤로그 ]             \n");
+    printf("              [ PROLOGUE: 프롤로그 ]             \n");
     printf("==================================================\n");
-    printf(" \"그래, 밑바닥부터 다시 시작하는 거야!\"\n");
-    printf(" 그렇게 당신은 집 앞 고물상 주인을 찾아가\n");
-    printf(" 당당하게 집게와 포대를 빌려 거리로 나섰습니다.\n\n");
-    printf(" 전직 엘리트 사원의 눈물겨운 고물상 제패기,\n");
+    printf(" \033[3m'쓰이다 버려진 저 쓰레기들이 꼭 나같구나...'\033[0m\n");
+    printf(" 그때 한 고물상 주인이 다가와 말합니다.\n\n");
+    printf(" \033[3m'버려진 것들 중엔 누구도 몰라본 보물도 많지.\n");
+    printf(" 자네라면 그 가치를 알아볼 수 있을 것 같은데.'\033[0m\n");
+    printf(" 전직 엘리트 사원의 눈물겨운 고물탐험기(?),\n");
     printf(" 지금 시작합니다!\n");
     printf("==================================================\n");
     system("pause");
@@ -99,9 +112,9 @@ void GamePlay::Intro()
 void GamePlay::CollectTrash(Player& player)
 {
     system("cls");
-    cout << "============= 🗑️ 폐기물 파밍 GO! =============\n";
+    cout << "============= 🗑️ 폐기물 수집 GO! =============\n";
     cout << " 동네 골목길을 샅샅이 뒤지는 중... (슥삭슥삭)\n";
-    cout << "=============================================\n";
+    cout << "==============================================\n";
     system("pause");
 
     //0~99 중 난수를 뽑아 폐지 등급 결정
@@ -144,8 +157,8 @@ void GamePlay::CollectTrash(Player& player)
         printf("\n🔧 뻰치와 드라이버로 조심스럽게 분해를 시작합니다...\n");
         system("pause");
 
-        int decompRate = rand() % 100;  // 플레이어의 분해 스탯(decompLv)이 높을수록 대박 확률 보너스 부여 (+decompLv %)
-        int jackpotChance = 5 + player.DismLevel;
+        int decompRate = rand() % 100;  
+        int jackpotChance = 10 + player.DismLevel;   //플레이어의 분해 스킬이 높을수록 대박 확률 보너스 부여
 
         if (decompRate < jackpotChance) {   // 대박. 등급에 따라 5배 ~ 50배 보상
             int multiplier = 5;
@@ -168,10 +181,14 @@ void GamePlay::CollectTrash(Player& player)
             else {
                 int halfPrice = FinalValue / 2;
                 player.Money += halfPrice;
-                printf("😭 실패... 핵심 부품이 부서졌습니다. 고철값만 겨우 건졌습니다. + %d원", halfPrice);
+                printf("😭 실패... 핵심 부품이 부서졌습니다. 고철값만 겨우 건졌습니다. + %d원\n", halfPrice);
             }
         }
-        printf("현재 잔액: %d원\n", player.Money);
+        printf("▶ 현재 잔액: %d원\n", player.Money);
+    }
+    else {
+        printf("다른 선택지는 없습니다. 판매와 분해 중에 고르세요!\n");
+        system("pause");
     }
 
     // 15% 확률로 돌을 주워 던전 이벤트 유발
@@ -233,7 +250,7 @@ void GamePlay::VisitShop(Player& player)
             printf("       🎰 레벨업 미니게임: 비밀번호를 맞춰라! 🎰\n");
             printf("==================================================\n");
             printf("고물상 주인이 비밀 금고의 번호(1~30) 중 하나를 생각했습니다.\n");
-            printf("총 [5번]의 기회 안에 번호를 맞추면 레벨업과 스탯을 쟁취합니다!\n");
+            printf("총 [5번]의 기회 안에 번호를 맞춰 레벨업과 SP 획득을 노립니다!\n");
             printf("--------------------------------------------------\n");
             system("pause");
 
@@ -277,7 +294,7 @@ void GamePlay::VisitShop(Player& player)
             system("pause");
         }
         else if (ShopChoice == 3) {
-            printf("\n피로를 못 이겨 마을로 발걸음을 돌립니다.\n");
+            printf("\n할 일이 생각나 마을로 발걸음을 돌립니다.\n");
             system("pause");
             break;
         }
@@ -360,21 +377,21 @@ void GamePlay::DungeonBattle(Player& player)
     else
         enemy = { "🔥 거대 폐기물 슬라임 🔥", 100, 100, 18 };
 
-    printf("\n🚨 야생의 [%s]이(가) 나타났다!\n", enemy.Name.c_str());
+    printf("\n🚨 쓰레기더미 속에서 [%s]이(가) 나타났다!\n", enemy.Name.c_str());
     system("pause");
 
-    // 스킬 횟수 제한 설정
+    // 속성 스킬 횟수 제한 설정
     int elementalSkillCount = 2;
 
-    // 본격적인 턴제 전투 루프
+    // 턴제 전투 루프
     while (enemy.HP > 0 && player.HP > 0) {
         system("cls");
         printf("==================================================\n");
         printf(" [플레이어] HP: %d / %d  |  [%s] HP: %d / %d\n", player.HP, player.MaxHP, enemy.Name.c_str(), enemy.HP, enemy.MaxHP);
         printf("==================================================\n");
-        printf("1. 기본 공격 (안전한 평타 수준의 데미지)\n");
-        printf("2. 속성 공격 (강력한 데미지 / 남은 횟수: %d회)\n", elementalSkillCount);
-        printf("3. 랜덤 공격 (기본or속성 랜덤 발동 / 혹은 10%% 확률로 즉사)\n");
+        printf("1. 연장 휘두르기 (기본 공격)\n");
+        printf("2. 초고압 전류 배선 던지기 (속성 공격 / 남은 횟수: %d회)\n", elementalSkillCount);
+        printf("3. 랜덤 공격 (랜덤 발동 / 10%% 확률로 플레이어 즉사)\n");
         printf("▶ 어떤 공격을 하시겠습니까? : ");
 
         int AttackChoice;
@@ -410,7 +427,7 @@ void GamePlay::DungeonBattle(Player& player)
         {
             int randomRoll = rand() % 100;
             if (randomRoll < 10) { // 10% 확률로 즉사
-                printf("\n💀 [치명적 오류] 무리하게 기계를 개조하다가 폭발했습니다! 즉사합니다!\n");
+                printf("\n💀 [치명적 오류] 무리하게 기계를 조작하다가 폭발했습니다! 즉사합니다!\n");
                 player.HP = 0;
             }
             else if (randomRoll < 55) { // 45% 확률로 기본 공격
@@ -467,7 +484,7 @@ void GamePlay::DungeonBattle(Player& player)
         // 확정 보상으로 대박 특수 폐기물 지급
         int rewardMoney = 5000;
         player.Money += rewardMoney;
-        printf("\n🎁 확정 보상: [★ 황금 고철 보물상자 ★]를 획득하여 고물상에 즉시 팔았습니다!\n");
+        printf("\n🎁 [★ 황금 고철 보물상자 ★]를 획득하여 고물상에 즉시 팔았습니다!\n");
         printf("💰 고물상 대금 지급: +%d원\n", rewardMoney);
     }
     system("pause");
@@ -481,39 +498,93 @@ void GamePlay::LastGame(Player& player)
     printf("🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨\n");
     printf("모은 돈으로 마침내 성공의 문턱에 다다른 순간,\n");
     printf("고물상 주인이 검은 미소를 지으며 당신의 앞을 막아섭니다!\n\n");
-    printf("고물상 주인: \"흐흐흐... 등급 시험은 다 내 계략이었지.\n");
-    printf("              네가 그동안 가져온 희귀 원료들로 난 '폐기물 지옥'을 만들었다!\"\n");
+    printf("고물상 주인: \033[3m흐흐흐... 등급 시험은 다 내 계략이었지.\n");
+    printf("              네가 그동안 가져온 희귀 원료들로 난 '폐기물 지옥'을 만들었다!\033[0m\n");
     printf("주인이 리모컨을 누르자, 거대한 거대 고철 로봇이 굉음을 내며 진격해옵니다!\n");
     system("pause");
 
     // 라스트게임 1: 폐기물 던전 전투
-    Monster finalBoss = { "🤖 고물상 마스터의 최종 거대 고철 로봇 🤖", 250, 250, 25 };
-    printf("\n⚔️ 1차전: 폐기물 지옥 던전 전투 START! ⚔*\n");
+    Monster finalBoss = { "🤖 고물상 마스터의 거대 고철 로봇 🤖", 250, 250, 25 };
+    printf("\n⚔️ 1차전 : 폐기물 보스와의 전투 START! ⚔*\n");
     system("pause");
+
+    int bossElementalSkillCount = 3;    //최종전 속성공격 횟수
 
     while (finalBoss.HP > 0 && player.HP > 0) {
         system("cls");
-        printf("==================================================\n");
-        printf(" [플레이어] HP: %d / %d  |  [최종 보스] HP: %d / %d\n", player.HP, player.MaxHP, finalBoss.HP, finalBoss.MaxHP);
-        printf("==================================================\n");
-        printf("1. 죽기살기로 연장 휘두르기 : 데미지 %d\n", player.AttackPower + 5);
+        printf("======================================================\n");
+        printf(" [플레이어] HP: %d / %d  |  [폐기물 보스] HP: %d / %d\n", player.HP, player.MaxHP, finalBoss.HP, finalBoss.MaxHP);
+        printf("======================================================\n");
+        printf("1. 연장 휘두르기 (기본 공격)\n");
+        printf("2. 초고압 전류 배선 던지기 (속성 공격 / 남은 횟수: %d회)\n", bossElementalSkillCount);
+        printf("3. 랜덤 공격 (랜덤 발동 / 10%% 확률로 플레이어 즉사)\n");
         printf("▶ 행동 선택: ");
-        int c; cin >> c;
+        int choice; cin >> choice;
 
-        printf("\n⚔️ 깡-! 보스에게 타격을 줬습니다! [-%d hp]\n", player.AttackPower + 5);
-        finalBoss.HP -= (player.AttackPower + 5);
+        int playerDamage = 0;
+        bool isPlayerTurnValueValid = true;
+
+        switch (choice) {
+        case 1: // 기본 공격
+            playerDamage = player.AttackPower + (rand() % 8) + 5; // 보스전 보너스 데미지 추가
+            printf("\n⚔️ 콰앙! 연장을 풀파워로 휘둘렀습니다! [%d의 데미지!]\n", playerDamage);
+            finalBoss.HP -= playerDamage;
+            break;
+
+        case 2: // 속성 공격
+            if (bossElementalSkillCount > 0) {
+                playerDamage = (player.AttackPower * 2.5f) + (rand() % 15); // 2.5배 치명타
+                printf("\n⚡ 파지직-- 초고압 배선이 로봇의 심장부에 작렬합니다! [%d의 초강력 데미지!]\n", playerDamage);
+                finalBoss.HP -= playerDamage;
+                bossElementalSkillCount--;
+            }
+            else {
+                printf("\n❌ 게이지가 부족합니다! 속성 공격 횟수를 다 썼습니다.\n");
+            }
+            break;
+
+        case 3: // 랜덤 공격
+        {
+            int randomRoll = rand() % 100;
+            if (randomRoll < 10) { //10% 확률로 플레이어 즉사
+                printf("\n💀 [과부하] 기계를 무리하게 조작하다가 역풍을 맞았습니다! 즉사합니다!\n");
+                player.HP = 0;
+            }
+            else if (randomRoll < 50) { //40% 확률로 기본 공격
+                playerDamage = player.AttackPower + (rand() % 8) + 5;
+                printf("\n🎲 랜덤 결과 -> 기본 공격 발동! [%d의 데미지]\n", playerDamage);
+                finalBoss.HP -= playerDamage;
+            }
+            else { //50% 확률로 횟수 차감 없는 속성 공격
+                playerDamage = (player.AttackPower * 2.5f) + (rand() % 15);
+                printf("\n🎲 랜덤 결과 -> 속성공격 대성공!! [%d의 데미지]\n", playerDamage);
+                finalBoss.HP -= playerDamage;
+            }
+            break;
+        }
+
+        default:
+            printf("\n❌ 긴장한 나머지 조작을 실수했습니다! (턴 낭비)\n");
+            isPlayerTurnValueValid = false;
+            break;
+        }
+
         system("pause");
 
         if (finalBoss.HP <= 0) break;
 
-        printf("\n💥 보스의 레이저 공격! 용사님이 큰 충격을 받습니다! [-20 hp]\n");
-        player.HP -= 20;
-        system("pause");
+        //보스의 공격 턴
+        if (isPlayerTurnValueValid && player.HP > 0) {
+            int bossDamage = finalBoss.AttackPower + (rand() % 6) - 2; //20 내외의 데미지
+            printf("\n💥 [%s]이(가) 폐기물 로켓을 발사했습니다! %d의 큰 데미지를 입었습니다.\n", finalBoss.Name.c_str(), bossDamage);
+            player.HP -= bossDamage;
+            system("pause");
+        }
     }
 
     // 1차전 패배시 (체력 충전 후 재도전 기획 반영)
     if (player.HP <= 0) {
-        printf("\n💀 쿠구궁... 쓰러졌습니다. 하지만 포기할 수 없습니다!\n");
+        printf("\n💀 쿠궁... 패배했습니다. 하지만 포기할 수 없습니다!\n");
         printf("정신을 바짝 차리고 체력을 회복해 다시 보스에게 도전합니다!\n");
         player.HP = player.MaxHP;
         system("pause");
@@ -524,56 +595,55 @@ void GamePlay::LastGame(Player& player)
     // 라스트게임 2: 고물상 주인과의 단판 게임 (Indian Game 변형)
     system("cls");
     printf("==================================================\n");
-    printf(" ⚔️ 최종전: 고물상 주인과의 단판 대결 (인디언 게임) ⚔*\n");
+    printf("      ⚔️ 최종전 : 고물상 주인과의 단판 대결 ⚔\n");
     printf("==================================================\n");
-    printf("고물상 주인: \"로봇을 부수다니 제법이군... 하지만 내 심리전도 이길 수 있을까?\"\n");
+    printf("고물상 주인: \"로봇을 부수다니 제법이군, %s...\n하지만 내가 죽지 않는 이상 끝없이 되살아날 거다!\n\n", player.Name.c_str());
     printf("주인이 카드 두 장을 꺼내 조커를 섞습니다.\n");
-    printf("당신의 전 재산 %d원이 이 한 판에 모두 걸립니다. 패배 시 즉시 파산!\n", player.Money);
+    printf("당신의 전재산 %d원이 이 한판에 모두 걸립니다. 패배시 즉시 파산!\n", player.Money);
     printf("--------------------------------------------------\n");
-    printf("1. 왼쪽 카드를 선택한다.\n");
-    printf("2. 오른쪽 카드를 선택한다.\n");
+    printf("1. 왼쪽 카드를 선택\n");
+    printf("2. 오른쪽 카드를 선택\n");
     printf("▶ 당신의 운명을 아우를 선택은? : ");
     int cardChoice;
     cin >> cardChoice;
 
-    printf("\n카드를 뒤집는 중... 두근... 두근...\n");
+    printf("\n카드를 뒤집는 중...\n");
     system("pause");
 
     int winningCard = (rand() % 2) + 1; // 1 혹은 2가 당첨
 
     if (cardChoice == winningCard) {
-        // [해피 엔딩 & 쿠키]
+        //해피엔딩
         system("cls");
         printf("==================================================\n");
-        printf(" 🎉🎉🎉 당 ∙ 첨 ∙ 성 ∙ 공 🎉🎉🎉\n");
+        printf(" 🎉🎉🎉 배 ∙ 팅 ∙ 성 ∙ 공 🎉🎉🎉\n");
         printf("==================================================\n");
         printf("고물상 주인: \"으아악! 말도 안 돼! 내 심리를 읽다니...!\"\n");
-        printf("고물상 주인은 순식간에 먼지가 되어 사라지고, 폐기물 지옥은 무너집니다.\n\n");
-        printf("🏆 당신은 전 재산을 지켜냄은 물론, 온 동네를 구한 '고물상 히어로'로 추앙받습니다!\n");
-        printf("보유 금액 %d원과 함께 평화롭고 호화로운 삶을 시작합니다!\n", player.Money);
+        printf("고물상 주인은 순식간에 쓰러지고, 폐기물 지옥도 무너집니다.\n\n");
+        printf("🏆 당신은 전재산을 지켜냄은 물론, 온동네를 구한 '고물상 히어로'로 추앙받습니다!\n");
+        printf("주인이 남긴 억대 자산과 함께 그토록 꿈꾸던 호화로운 삶을 시작합니다!\n");
         system("pause");
 
-        // 쿠키
+        //쿠키
         system("cls");
         printf("🎬 [Cookie]\n");
         printf("--------------------------------------------------\n");
         printf("몇 년 후, 으리으리한 고물상 본점의 주인이 된 당신.\n");
-        printf("문득 문밖에서 땀을 뻘뻘 흘리며 리어카를 끄는 젊은 청소부를 보게 됩니다.\n");
-        printf("그 모습에서 치열했던 자신의 과거를 떠올린 당신은 아련한 미소를 지으며 다가갑니다...\n\n");
-        printf("당신: \"어이, 젊은이. 고물 참 실하게 잘 주웠구만. 내가 다른 데보다 '50배' 더 쳐주지.\"\n");
-        printf("젊은 청소부의 눈물 가득한 감사 인사를 뒤로하며, 진짜 영웅의 이야기가 막을 내립니다.\n");
+        printf("문득 거리에서 땀흘리며 리어카를 끄는 젊은 청소부를 보게 됩니다.\n");
+        printf("어떤 생각이 떠오른 당신은 의미심장한 미소로 다가갑니다...\n\n");
+        printf("당신: \"젊은이. 고물 참 실하게 잘 줍는구만. 앞으로 나와 거래하겠나?\"\n");
         printf("--------------------------------------------------\n");
         printf("         - THE END (HAPPY ENDING) -\n");
     }
     else {
-        // [배드 엔딩]
+        //배드 엔딩
         system("cls");
         printf("==================================================\n");
         printf(" 💀💀💀 꽝! 패배 💀💀💀\n");
         printf("==================================================\n");
         printf("고물상 주인: \"하하하! 조커를 골랐구나! 네 놈의 재산은 이제 다 내 거다!\"\n");
-        printf("당신은 전 재산 %d원을 고물상 빌런에게 몽땅 뺏기고 빈털터리가 되었습니다...\n", player.Money);
-        printf("결국 평생 고물상 주인의 밑에서 무임금으로 폐지를 줍는 노예가 되었습니다.\n");
+        printf("당신은 전재산 %d원을 몽땅 뺏기고 빈털터리가 되었습니다...\n", player.Money);
+        printf("평생 고물상 주인의 밑에서 무임금으로 폐지를 줍는 노예가 되었습니다.\n");
         printf("--------------------------------------------------\n");
         printf("         - THE END (BAD ENDING) -\n");
     }

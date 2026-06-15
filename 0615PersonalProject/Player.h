@@ -22,7 +22,7 @@ class Player
 public:
 	std::string Name;
 	int Level = 1;
-	int Money = 10000;
+	int Money = 100000;
 	int HP = 100;
 	int MaxHP = 100;
 	int SP = 1;			//스탯포인트
