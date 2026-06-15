@@ -322,7 +322,7 @@ void GamePlay::VisitShop(Player& player)
             else {
                 printf("\n기회를 모두 날렸습니다! 정답은 [%d]였습니다.\n", answer);
                 printf("고물상 주인: \"하하하! 지참금은 내가 잘 쓰마!\"\n");
-                printf("레벨업에 실패했지만 다시 돈을 모아 도전할 수 있습니다.)\n");
+                printf("레벨업에 실패했지만 다시 돈을 모아 도전할 수 있습니다.\n");
             }
             system("pause");
         }
