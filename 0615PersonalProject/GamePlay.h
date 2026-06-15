@@ -14,6 +14,7 @@ public:
 	void LastGame(Player& player);
 };
 
+//던전 내 몬스터 구조체
 struct Monster
 {
 	std::string Name;

@@ -22,7 +22,15 @@ void GamePlay::Play_Main()	//전반적인 게임 흐름. 필요한 함수는 이
 
     srand(static_cast<unsigned int>(time(NULL)));   //랜덤 시드
 
-    /*=========================================================*/
+    /* ---------------------------------------------------- */
+    // 녹화시 빠른 진행을 위한 변수 세팅 (실제 진행시 주석 처리)
+    //player.Level = 8;
+    //player.Money = 100000;
+    //player.AttackPower = 40;
+    //player.MaxHP = 200;
+    //player.HP = 150;
+    /* ---------------------------------------------------- */
+
     Intro();        //시작 전 인트로
     
     while (true)    //게임 루프
@@ -62,6 +70,9 @@ void GamePlay::Play_Main()	//전반적인 게임 흐름. 필요한 함수는 이
             player.Money += 10000000;
             printf("🎉 축하합니다! 레벨 10 달성의 보상으로 현금 1000만원이 즉시 지급됩니다!\n");
             printf("▶ 현재 잔액: %d원\n", player.Money);
+            printf("=========================================================================\n");
+            system("pause");
+
             LastGame(player);
             break;
         }
@@ -105,10 +116,17 @@ void GamePlay::Intro()
     printf(" \033[3m'쓰이다 버려진 저 쓰레기들이 꼭 나같구나...'\033[0m\n");
     printf(" 그때 한 고물상 주인이 다가와 말합니다.\n\n");
     printf(" \033[3m'버려진 것들 중엔 누구도 몰라본 보물도 많지.\n");
-    printf(" 자네라면 그 가치를 알아볼 수 있을 것 같은데.'\033[0m\n");
+    printf(" 자네라면 그 가치를 알아볼 수 있을 것 같은데...'\033[0m\n");
+    printf("--------------------------------------------------\n");
+    system("pause");
+
+    system("cls");
+    printf("==================================================\n");
+    printf("   [ No RISK No HOME! : 쓰레기로 자수성가하기 ]\n");
+    printf("==================================================\n");
     printf(" 전직 엘리트 사원의 눈물겨운 고물탐험기(?),\n");
     printf(" 지금 시작합니다!\n");
-    printf("==================================================\n");
+    printf("--------------------------------------------------\n");
     system("pause");
 }
 
@@ -160,8 +178,8 @@ void GamePlay::CollectTrash(Player& player)
 
     if (Choice == 1) { //판매
         player.Money += FinalValue;
-        printf("\n💰 고물상에 넘깁니다. 주인이 값을 치러줍니다. 💵 + %d원", FinalValue);
-        printf("현재 잔액 : %d원\n", player.Money);
+        printf("\n💰 고물상에 넘깁니다. 주인이 값을 치러줍니다. 💵 + %d원\n", FinalValue);
+        printf("▶ 현재 잔액 : %d원\n", player.Money);
     }
     else if (Choice == 2) { // 분해
         printf("\n🔧 뻰치와 드라이버로 조심스럽게 분해를 시작합니다...\n");
@@ -215,21 +233,6 @@ void GamePlay::CollectTrash(Player& player)
 //고물상 방문 - HP회복, 승급게임, SP투자 선택지 함수
 void GamePlay::VisitShop(Player& player)
 {
-    //레벨업시 성장 멘트(이사) 추가를 위한 집 목록
-    string houses[] =
-    {
-        "",
-        "반지하",
-        "하숙집",
-        "20년 된 원룸",
-        "10년 된 원룸",
-        "구축 오피스텔",
-        "신축 오피스텔",
-        "거실 있는 집",
-        "널찍한 투룸",
-        "복도식 아파트"
-    };
-
     while (true) {
         system("cls");
         printf("==================================================\n");
@@ -237,7 +240,7 @@ void GamePlay::VisitShop(Player& player)
         printf("==================================================\n");
         printf(" [보유 금액] %d원  |  [현재 레벨] LV %d\n", player.Money, player.Level);
         printf("--------------------------------------------------\n");
-        printf("1. 💊 체력 회복하기 (드링크 마시기) : 1,000원 [HP +50]\n");
+        printf("1. 💊 체력 회복하기 (드링크) : 1000원 [HP +50]\n");
         printf("2. 🎰 승급 미니게임 도전하기       : %d원\n", player.Level * 3000); // 레벨별 도전 비용 상승
         printf("3. 🔙 마을로 돌아가기\n");
         printf("==================================================\n");
@@ -312,9 +315,9 @@ void GamePlay::VisitShop(Player& player)
                 printf("보상으로 능력치를 올릴 수 있는 [스탯포인트 2 SP]를 획득했습니다.\n");
                 printf("이제 수집하는 폐기물의 기본 가치가 20%% 더 상승합니다.\n");
 
-                //성장(이사) 멘트 추가
+                //레벨업시 성장(이사) 멘트 추가
                 if (player.Level <= 9)
-                    printf("\n🏠열심히 모은 돈으로 [%s]를 벗어나 [%s]로 이사합니다...\n", houses[player.Level - 1].c_str(), houses[player.Level].c_str());
+                    printf("\n🏠 열심히 모은 돈으로 [%s]를 벗어나 [%s]로 이사합니다...\n", houses[player.Level - 1].c_str(), houses[player.Level].c_str());
             }
             else {
                 printf("\n기회를 모두 날렸습니다! 정답은 [%d]였습니다.\n", answer);
@@ -347,7 +350,7 @@ void GamePlay::InvestSP(Player& player)
         printf("--------------------------------------------------\n");
         printf("1. 🚚 수집력 강화 (현재 LV %d) : 폐지 기본 가치 +20%%\n", player.CollectLevel);
         printf("2. 🔧 분해 기술   (현재 LV %d) : 분해 대박 확률 +1%%\n", player.DismLevel);
-        printf("3. ⚔️ 전투 공격력 (현재 %d)    : 던전 몬스터 사냥 특화\n", player.AttackPower);
+        printf("3. ⚔️ 전투 공격력 (현재 %d)   : 전투시 데미지 상승\n", player.AttackPower);
         printf("4. 🔙 마을로 돌아가기\n");
         printf("==================================================\n");
         printf("▶ 어떤 능력치를 올리시겠습니까? : ");
@@ -419,7 +422,7 @@ void GamePlay::DungeonBattle(Player& player)
     while (enemy.HP > 0 && player.HP > 0) {
         system("cls");
         printf("==================================================\n");
-        printf(" [플레이어] HP: %d / %d\n[%s] HP: %d / %d\n", player.HP, player.MaxHP, enemy.Name.c_str(), enemy.HP, enemy.MaxHP);
+        printf("[플레이어] HP: %d / %d\n[%s] HP: %d / %d\n", player.HP, player.MaxHP, enemy.Name.c_str(), enemy.HP, enemy.MaxHP);
         printf("==================================================\n");
         printf("1. 연장 휘두르기 (기본 공격)\n");
         printf("2. 초고압 전류 배선 던지기 (속성 공격 / 남은 횟수: %d회)\n", elementalSkillCount);
@@ -632,7 +635,7 @@ void GamePlay::LastGame(Player& player)
     printf("==================================================\n");
     printf("고물상 주인: \"로봇을 부수다니 제법이군, %s...\n하지만 내가 죽지 않는 이상 끝없이 되살아날 거다!\n\n", player.Name.c_str());
     printf("주인이 카드 두 장을 꺼내 조커를 섞습니다.\n");
-    printf("당신의 전재산 %d원이 이 한판에 모두 걸립니다. 패배시 즉시 파산!\n", player.Money);
+    printf("당신의 전재산 %d원이 이 한판에 모두 걸립니다.\n패배시 즉시 파산!\n", player.Money);
     printf("--------------------------------------------------\n");
     printf("1. 왼쪽 카드를 선택\n");
     printf("2. 오른쪽 카드를 선택\n");
@@ -682,5 +685,3 @@ void GamePlay::LastGame(Player& player)
     }
     system("pause");
 }
-
-
