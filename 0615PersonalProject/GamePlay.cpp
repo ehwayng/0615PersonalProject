@@ -10,7 +10,7 @@ Player player;
 
 void GamePlay::Play_Main()	//전반적인 게임 흐름. 필요한 함수는 이 코드 안에서 갖고 놀기.
 {
-    //ANSI Escape Code(기울임 등)를 활성화하는 설정
+    //폰트 기울임 활성화
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hOut != INVALID_HANDLE_VALUE) {
         DWORD dwMode = 0;
@@ -59,6 +59,9 @@ void GamePlay::Play_Main()	//전반적인 게임 흐름. 필요한 함수는 이
         // 엔딩 조건 체크 (LV 10 달성 시 최종 라스트 게임으로 강제 전환)
         if (player.Level >= 10) {
             system("cls");
+            player.Money += 10000000;
+            printf("🎉 축하합니다! 레벨 10 달성의 보상으로 현금 1000만원이 즉시 지급됩니다!\n");
+            printf("▶ 현재 잔액: %d원\n", player.Money);
             LastGame(player);
             break;
         }
@@ -109,6 +112,7 @@ void GamePlay::Intro()
     system("pause");
 }
 
+//폐기물 수집 및 분해, 던전 입장 프로세스
 void GamePlay::CollectTrash(Player& player)
 {
     system("cls");
@@ -124,33 +128,39 @@ void GamePlay::CollectTrash(Player& player)
     if (rate < 70) { //70% 확률로 일반 폐기물
         int namePick = rand() % 3;
         string names[] = { "찌그러진 알루미늄 캔", "찢어진 택배 박스", "오래된 생수통" };
-        FoundTrash = { names[namePick], 300, Grade_Normal };
+        FoundTrash = { names[namePick], 700, Grade_Normal };
     }
     else if (rate < 95) { // 25% 확률로 희귀 고철
         int namePick = rand() % 2;
         string names[] = { "녹슨 자전거 프레임", "구리 전선 한 묶음" };
-        FoundTrash = { names[namePick], 1200, Grade_Rare };
+        FoundTrash = { names[namePick], 3000, Grade_Rare };
     }
-    else { // 5% 확률로 대박 전설 아이템
-        FoundTrash = { "★ 누군가 잃어버린 애플폰 ★", 5000, Grade_Legend };
+    else { // 5% 확률로 전설 아이템
+        FoundTrash = { "★ 누군가 잃어버린 애플폰 ★", 15000, Grade_Legend };
     }
 
     // 플레이어의 수집 레벨에 따라 기본 가치 20%씩 보너스
     int FinalValue = FoundTrash.BaseValue * (1.0f + (player.CollectLevel - 1) * 0.2f);
 
-    printf("\n🎉 축하합니다! [ %s ]을(를) 발견했습니다!\n", FoundTrash.TrashName.c_str());
-    printf("💰 현재 상태에서의 감정가: %d원\n\n", FinalValue);
-
+    printf("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+    if (FoundTrash.Grade == Grade_Normal)
+        printf("\n[NORMAL] 등급의 %s을(를) 발견했습니다!\n", FoundTrash.TrashName.c_str());
+    else if (FoundTrash.Grade == Grade_Rare)
+        printf("\n🎉 축하합니다! ✨[RARE]✨ 등급의 %s을(를) 발견했습니다!\n", FoundTrash.TrashName.c_str());
+    else
+        printf("\n🚨이럴수가!🚨 💎[LEGEND]💎 등급의 %s을(를) 발견했습니다!!\n", FoundTrash.TrashName.c_str());
+    
+    printf("💰 현재 상태의 감정가: %d원\n", FinalValue);
+    printf("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
     printf("1. 즉시 고물상에 판매하기\n");
     printf("2. 대박 물건일지도? 분해하기\n");
     printf("▶ 행동을 선택하세요: ");
-
     int Choice;
     cin >> Choice;
 
     if (Choice == 1) { //판매
         player.Money += FinalValue;
-        printf("\n💰 고물상에 넘깁니다. 주인이 값을 치러줍니다. + %d원", FinalValue);
+        printf("\n💰 고물상에 넘깁니다. 주인이 값을 치러줍니다. 💵 + %d원", FinalValue);
         printf("현재 잔액 : %d원\n", player.Money);
     }
     else if (Choice == 2) { // 분해
@@ -170,7 +180,7 @@ void GamePlay::CollectTrash(Player& player)
 
             printf("🚨 [대 ∙ 박 ∙ 사 ∙ 건] 🚨\n");
             printf("💎 안에서 값비싼 '희귀 원료'가 쏟아집니다!!\n");
-            printf("기존 가치의 %d배 보상! + %d원\n", multiplier, jackpotMoney);
+            printf("기존 가치의 %d배 보상! 💵 + %d원\n", multiplier, jackpotMoney);
         }
         else {  // 쪽박. 70% 확률로 절반, 30% 확률로 증발
             if (rand() % 10 < 3) {
@@ -181,7 +191,7 @@ void GamePlay::CollectTrash(Player& player)
             else {
                 int halfPrice = FinalValue / 2;
                 player.Money += halfPrice;
-                printf("😭 실패... 핵심 부품이 부서졌습니다. 고철값만 겨우 건졌습니다. + %d원\n", halfPrice);
+                printf("😭 실패... 핵심 부품이 부서졌습니다. 고철값만 겨우 건졌습니다. 💵 + %d원\n", halfPrice);
             }
         }
         printf("▶ 현재 잔액: %d원\n", player.Money);
@@ -191,8 +201,8 @@ void GamePlay::CollectTrash(Player& player)
         system("pause");
     }
 
-    // 15% 확률로 돌을 주워 던전 이벤트 유발
-    if (rand() % 100 < 15) {
+    // 20% 확률로 돌을 주워 던전 이벤트 유발
+    if (rand() % 100 < 20) {    
         printf("\n'어라...?' 폐기물 더미 밑에서 기묘한 빛을 내는 [신비로운 돌]을 건드렸습니다!\n");
         printf("🌀 알 수 없는 강력한 힘에 이끌려 폐기물 던전으로 강제 소환됩니다!!\n");
         system("pause");
@@ -202,8 +212,24 @@ void GamePlay::CollectTrash(Player& player)
     system("pause");
 }
 
+//고물상 방문 - HP회복, 승급게임, SP투자 선택지 함수
 void GamePlay::VisitShop(Player& player)
 {
+    //레벨업시 성장 멘트(이사) 추가를 위한 집 목록
+    string houses[] =
+    {
+        "",
+        "반지하",
+        "하숙집",
+        "20년 된 원룸",
+        "10년 된 원룸",
+        "구축 오피스텔",
+        "신축 오피스텔",
+        "거실 있는 집",
+        "널찍한 투룸",
+        "복도식 아파트"
+    };
+
     while (true) {
         system("cls");
         printf("==================================================\n");
@@ -278,13 +304,17 @@ void GamePlay::VisitShop(Player& player)
                 chance--;
             }
 
-            // 게임 결과 처리
+            //게임 결과 처리
             if (isWin) {
                 player.Level++;
                 player.SP += 2; // 레벨업 보상 스탯 포인트 지급
                 printf("\n레벨업 성공! [LV %d] 이(가) 되었습니다!\n", player.Level);
                 printf("보상으로 능력치를 올릴 수 있는 [스탯포인트 2 SP]를 획득했습니다.\n");
                 printf("이제 수집하는 폐기물의 기본 가치가 20%% 더 상승합니다.\n");
+
+                //성장(이사) 멘트 추가
+                if (player.Level <= 9)
+                    printf("\n🏠열심히 모은 돈으로 [%s]를 벗어나 [%s]로 이사합니다...\n", houses[player.Level - 1].c_str(), houses[player.Level].c_str());
             }
             else {
                 printf("\n기회를 모두 날렸습니다! 정답은 [%d]였습니다.\n", answer);
@@ -305,6 +335,7 @@ void GamePlay::VisitShop(Player& player)
     }
 }
 
+//SP 투자
 void GamePlay::InvestSP(Player& player)
 {
     while (true) {
@@ -358,6 +389,7 @@ void GamePlay::InvestSP(Player& player)
     }
 }
 
+//던전 입장시 호출
 void GamePlay::DungeonBattle(Player& player)
 {
     system("cls");
@@ -387,7 +419,7 @@ void GamePlay::DungeonBattle(Player& player)
     while (enemy.HP > 0 && player.HP > 0) {
         system("cls");
         printf("==================================================\n");
-        printf(" [플레이어] HP: %d / %d  |  [%s] HP: %d / %d\n", player.HP, player.MaxHP, enemy.Name.c_str(), enemy.HP, enemy.MaxHP);
+        printf(" [플레이어] HP: %d / %d\n[%s] HP: %d / %d\n", player.HP, player.MaxHP, enemy.Name.c_str(), enemy.HP, enemy.MaxHP);
         printf("==================================================\n");
         printf("1. 연장 휘두르기 (기본 공격)\n");
         printf("2. 초고압 전류 배선 던지기 (속성 공격 / 남은 횟수: %d회)\n", elementalSkillCount);
@@ -485,11 +517,12 @@ void GamePlay::DungeonBattle(Player& player)
         int rewardMoney = 5000;
         player.Money += rewardMoney;
         printf("\n🎁 [★ 황금 고철 보물상자 ★]를 획득하여 고물상에 즉시 팔았습니다!\n");
-        printf("💰 고물상 대금 지급: +%d원\n", rewardMoney);
+        printf("💰 고물상 대금 지급: 💵 + %d원\n", rewardMoney);
     }
     system("pause");
 }
 
+//엔딩 게임
 void GamePlay::LastGame(Player& player)
 {
     system("cls");
@@ -499,12 +532,12 @@ void GamePlay::LastGame(Player& player)
     printf("모은 돈으로 마침내 성공의 문턱에 다다른 순간,\n");
     printf("고물상 주인이 검은 미소를 지으며 당신의 앞을 막아섭니다!\n\n");
     printf("고물상 주인: \033[3m흐흐흐... 등급 시험은 다 내 계략이었지.\n");
-    printf("              네가 그동안 가져온 희귀 원료들로 난 '폐기물 지옥'을 만들었다!\033[0m\n");
-    printf("주인이 리모컨을 누르자, 거대한 거대 고철 로봇이 굉음을 내며 진격해옵니다!\n");
+    printf("             네가 그동안 가져온 희귀 원료들로 '폐기물 지옥'을 만들었다!\033[0m\n");
+    printf("그가 리모컨을 누르자, 거대한 고철 로봇이 굉음을 내며 진격해옵니다!\n");
     system("pause");
 
     // 라스트게임 1: 폐기물 던전 전투
-    Monster finalBoss = { "🤖 고물상 마스터의 거대 고철 로봇 🤖", 250, 250, 25 };
+    Monster finalBoss = { "🤖 고물상 마스터의 거대 고철 로봇 🤖", 150, 150, 20 }; //체력 150, 공격력 20의 보스
     printf("\n⚔️ 1차전 : 폐기물 보스와의 전투 START! ⚔*\n");
     system("pause");
 

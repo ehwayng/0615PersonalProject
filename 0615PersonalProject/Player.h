@@ -33,11 +33,5 @@ public:
 	int AttackPower = 0;	//전투시 공격력
 
 	void ShowInfo();
-/*	void ApplyDamage(int Damage);
-	void Die();											
-	void GetReward(int RewardMoney, int RewardExp);	
-	void GetRest();	
-	void Savings(int InMoney);	
-	void Gamble(int InMoney)*/;
 };
 
